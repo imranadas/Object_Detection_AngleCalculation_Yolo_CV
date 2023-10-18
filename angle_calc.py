@@ -6,10 +6,8 @@ import torch
 
 src = "test.jpg"
 detections = detection_tensors(src)
-print(detections)
 for detection in detections:
     data = detection.boxes.data.clone().detach()
-    print(data)
     for subimage_parameters in data:
         x1, y1, x2, y2, score, label = subimage_parameters
         x1 = x1.item()
