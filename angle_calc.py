@@ -17,6 +17,6 @@ for detection in detections:
         grayscale_subimage = cv2.cvtColor(subimage, cv2.COLOR_BGR2GRAY)
         canny_edges = cv2.Canny(grayscale_subimage, 50, 150)
         median_blurred_edges = cv2.medianBlur(canny_edges, 3)
-        thresholded_edges = cv2.threshold(median_blurred_edges, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]      
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+        thresholded_edges = cv2.threshold(median_blurred_edges, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]   
+        cv2.imshow("", subimage) 
+        cv2.waitKey(0)
