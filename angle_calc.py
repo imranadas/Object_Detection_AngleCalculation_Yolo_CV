@@ -23,7 +23,21 @@ for detection in detections:
         if lines is not None:
             for line in lines:
                 x1, y1, x2, y2 = line[0]
-                cv2.line(line_image, (x1, y1), (x2, y2), 255, 1)
+                slope = (y2 - y1) / (x2 - x1 + 1e-5)
+                if abs(slope) > 0.1 and abs(slope) < 10:
+                    cv2.line(line_image, (x1, y1), (x2, y2), 255, 1)
+                    angle_degrees = np.arctan(slope) * 180 / np.pi
+                    print(f"Angle of inclination: {angle_degrees} degrees")
+        horizontal_lines = cv2.HoughLinesP(line_image, 1, np.pi / 180, threshold=100, minLineLength=100, maxLineGap=10)
+        if horizontal_lines is not None:
+            for line in horizontal_lines:
+                x1, y1, x2, y2 = line[0]
+                cv2.line(line_image, (x1, y1), (x2, y2), 0, 1)
+        vertical_lines = cv2.HoughLinesP(line_image, 1, np.pi / 180, threshold=100, minLineLength=100, maxLineGap=10)
+        if vertical_lines is not None:
+            for line in vertical_lines:
+                x1, y1, x2, y2 = line[0]
+                cv2.line(line_image, (x1, y1), (x2, y2), 0, 1)
         cv2.imshow("Canny_Edges", canny_edges)
         cv2.imshow("Canny_Edges_Pruning", line_image)
         cv2.imshow("SubImage", subimage)
