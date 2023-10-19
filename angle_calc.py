@@ -8,21 +8,24 @@ import math
 def calculatation(path):
     src = cv2.imread(path)
     detections = detection_tensors(src)
-    output_image = cv2.imread("results/last_results.jpg")
+    output_image = cv2.imread("temp.jpg")
     for detection in detections:
         data = detection.boxes.data.clone().detach()
+        i=0
         for subimage_parameters in data:
             x1, y1, x2, y2, score, label = subimage_parameters
             x1 = int(x1.item())
             y1 = int(y1.item())
             x2 = int(x2.item())
             y2 = int(y2.item())
+
             subimage = src[y1:y2, x1:x2]
             gauss_blur = cv2.GaussianBlur(subimage,(1,1), cv2.BORDER_DEFAULT)
             grayscale_subimage = cv2.cvtColor(gauss_blur, cv2.COLOR_BGR2GRAY)
             canny_edges = cv2.Canny(grayscale_subimage, 0, 200, L2gradient=True)
             lines = cv2.HoughLinesP(canny_edges, 1, np.pi / 180, threshold=50, minLineLength=10, maxLineGap=1)
             line_image = np.zeros_like(canny_edges)
+
             book_slope = 0
             angles_array = []
             if lines is not None:
@@ -43,18 +46,18 @@ def calculatation(path):
                 for line in vertical_lines:
                     lx1, ly1, lx2, ly2 = line[0]
                     cv2.line(line_image, (lx1, ly1), (lx2, ly2), 0, 1)
+
             book_slope = st.mode(angles_array)
-            if math.isnan(book_slope[0]):
-                text = "NaN"
-            else:
-                text = f"{int(book_slope[0])} degrees"
             font = cv2.FONT_HERSHEY_SIMPLEX
             color = (255, 0, 0)
             font_scale = 0.5
-            thickness = 1
-            x = int((x1 + x2) / 2 + 25)
-            y = int((y1 + y2) / 2 + 25)
-            output_image = cv2.putText(output_image, text, (x,y),font, font_scale, color, thickness)
-        cv2.imshow("OutPut" ,output_image)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+            thickness = 2
+            x = int((x1 + x2) / 2)
+            y = int((y1 + y2) / 2 + 25*i)
+            i+=1
+            if math.isnan(book_slope[0]):
+                text = "NaN"
+            else:
+                text = f"{abs(int(book_slope[0]))} degrees"
+                output_image = cv2.putText(output_image, text, (x,y),font, font_scale, color, thickness)
+        return output_image

@@ -7,7 +7,9 @@ def detection_tensors(src):
 
 def draw_bounding_boxes(results):
     from PIL import Image
+    import os 
+    current_working_directory = os.getcwd()
     for r in results:
         im_array = r.plot()
         im = Image.fromarray(im_array[..., ::-1])
-        im.save('results/last_results.jpg') 
+        im.save("temp.jpg")
