@@ -17,8 +17,14 @@ for detection in detections:
         subimage = src[y1:y2, x1:x2]
         gauss_blur = cv2.GaussianBlur(subimage,(3,3), cv2.BORDER_DEFAULT)
         grayscale_subimage = cv2.cvtColor(gauss_blur, cv2.COLOR_BGR2GRAY)
-        canny_edges = cv2.Canny(grayscale_subimage, 50, 200, L2gradient=True)
+        canny_edges = cv2.Canny(grayscale_subimage, 0, 200, L2gradient=True)
+        lines = cv2.HoughLinesP(canny_edges, 1, np.pi / 180, threshold=100, minLineLength=100, maxLineGap=10)
+        line_image = np.zeros_like(canny_edges)
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            cv2.line(line_image, (x1, y1), (x2, y2), 255, 1)
         cv2.imshow("Canny_Edges", canny_edges)
+        cv2.imshow("Canny_Edges_Pruning", line_image)
         cv2.imshow("SubImage", subimage)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
