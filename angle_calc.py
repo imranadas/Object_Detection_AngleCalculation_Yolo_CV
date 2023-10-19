@@ -15,13 +15,10 @@ for detection in detections:
         x2 = int(x2.item())
         y2 = int(y2.item())
         subimage = src[y1:y2, x1:x2]
-        gauss_blur = cv2.GaussianBlur(subimage,(5,5),cv2.BORDER_DEFAULT)
+        gauss_blur = cv2.GaussianBlur(subimage,(3,3), cv2.BORDER_DEFAULT)
         grayscale_subimage = cv2.cvtColor(gauss_blur, cv2.COLOR_BGR2GRAY)
-        canny_edges = cv2.Canny(grayscale_subimage, 100, 200, L2gradient=True)
-        median_blurred_edges = cv2.medianBlur(canny_edges, 1)
-        mask = np.zeros_like(median_blurred_edges)
-        mask[median_blurred_edges != 0] = subimage[median_blurred_edges != 0]
-        output_subimage = mask
-        cv2.imshow("openCV", output_subimage) 
+        canny_edges = cv2.Canny(grayscale_subimage, 50, 200, L2gradient=True)
+        cv2.imshow("Canny_Edges", canny_edges)
+        cv2.imshow("SubImage", subimage)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
