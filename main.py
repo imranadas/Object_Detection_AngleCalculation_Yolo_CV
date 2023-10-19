@@ -1,10 +1,12 @@
 import os
 from angle_calc import calculatation
 import cv2
+import shutil
 
 input_folder = "D:\\IITB\\Coding_Programming\\Python_YOLO_OpenCV_Book_Detection_Angle_Processing\\book_image"
-output_folder = "D:\\IITB\\Coding_Programming\\Python_YOLO_OpenCV_Book_Detection_Angle_Processing\\result_book_image"
-os.rmdir(output_folder)
+output_folder = "D:\\IITB\\Coding_Programming\\Python_YOLO_OpenCV_Book_Detection_Angle_Processing\\results"
+if os.path.exists(output_folder):
+    shutil.rmtree(output_folder)
 os.mkdir(output_folder)
 
 def show_image(image):
