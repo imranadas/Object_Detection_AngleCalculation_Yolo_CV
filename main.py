@@ -3,8 +3,10 @@ from angle_calc import calculatation
 import cv2
 import shutil
 
-input_folder = "% Enter PATH here %"
-output_folder = "% Enter PATH here %"
+input_folder = input("Enter Path to Images: ")
+
+output_folder = os.getcwd()
+output_folder = os.path.join(output_folder, "results")
 if os.path.exists(output_folder):
     shutil.rmtree(output_folder)
 os.mkdir(output_folder)
