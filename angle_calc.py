@@ -7,7 +7,6 @@ import math
 
 src = cv2.imread("test.jpg")
 detections = detection_tensors(src)
-
 for detection in detections:
     data = detection.boxes.data.clone().detach()
     for subimage_parameters in data:
@@ -26,29 +25,20 @@ for detection in detections:
         angles_array = []
         if lines is not None:
             for line in lines:
-                x1, y1, x2, y2 = line[0]
-                slope = (y2 - y1) / (x2 - x1 + 1e-5)
+                lx1, ly1, lx2, ly2 = line[0]
+                slope = (ly2 - ly1) / (lx2 - lx1 + 1e-5)
                 if abs(slope) > (0.1) and abs(slope) < (2*np.pi - 0.1):
-                    cv2.line(line_image, (x1, y1), (x2, y2), 255, 1)
+                    cv2.line(line_image, (lx1, ly1), (lx2, ly2), 255, 1)
                     angle_degrees = np.arctan(slope) * 180 / np.pi
                     angles_array = np.append(angles_array, angle_degrees)
-        book_slope = st.mode(angles_array)
-        if math.isnan(book_slope[0]):
-            print("Angle Not Calculated")
-        else:
-            print(f"Angle of inclination: {book_slope[0]} degrees")
         horizontal_lines = cv2.HoughLinesP(line_image, 1, np.pi / 180, threshold=50, minLineLength=25, maxLineGap=5)
         if horizontal_lines is not None:
             for line in horizontal_lines:
-                x1, y1, x2, y2 = line[0]
-                cv2.line(line_image, (x1, y1), (x2, y2), 0, 1)
+                lx1, ly1, lx2, ly2 = line[0]
+                cv2.line(line_image, (lx1, ly1), (lx2, ly2), 0, 1)
         vertical_lines = cv2.HoughLinesP(line_image, 1, np.pi / 180, threshold=50, minLineLength=25, maxLineGap=5)
         if vertical_lines is not None:
             for line in vertical_lines:
-                x1, y1, x2, y2 = line[0]
-                cv2.line(line_image, (x1, y1), (x2, y2), 0, 1)
-        cv2.imshow("Canny_Edges", canny_edges)
-        cv2.imshow("Canny_Edges_Pruning", line_image)
-        cv2.imshow("SubImage", subimage)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+                lx1, ly1, lx2, ly2 = line[0]
+                cv2.line(line_image, (lx1, ly1), (lx2, ly2), 0, 1)
+        book_slope = st.mode(angles_array)

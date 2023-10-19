@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Books']
+
+roboflow:
+  workspace: entropygg
+  project: leaning-books
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/entropygg/leaning-books/dataset/1
